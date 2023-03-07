@@ -15,7 +15,8 @@ public enum eWeaponType
     phaser, // [NI] Shots that move in waves
     missile, // [NI] Homing missiles
     laser, // [NI] Damage over time
-    shield // Raise shieldLevel
+    shield, // Raise shieldLevel
+    dash // Raise dashLevel
 }
 
 /// <summary>
