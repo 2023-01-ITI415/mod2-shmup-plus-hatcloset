@@ -14,10 +14,23 @@ public class Hero : MonoBehaviour {
     public GameObject projectilePrefab;
     public float projectileSpeed = 40;
     public Weapon[] weapons;
+    public const float DOUBLE_PRESS_TIME = .2f;
+    public const float COOLDOWN_TIME = 2f;
+    public static Color dashColor = new Vector4(0.4745098f, 0.01960783f, 0.9725491f);
+    public static Color dashDoneColor = Color.red;
 
-    [Header("Dynamic")] [Range(0,4)]
-    
+    [Header("Dynamic")]
+    public Color[] originalColors;
+    public Material[] materials; // All the Materials of this & its children
+    public bool dashedyet = false;
+    private float timeSinceLastPress;
+    private float lastPressTime;
+    private float boost = 0f;
+    [Range(0,4)]
     private float _shieldLevel = 1;
+    private float _dashLevel = 0;
+
+    
 
     [Tooltip ("This variable holds a reference to the last triggering GameObject")]
     private GameObject lastTriggerGo = null;
@@ -27,7 +40,7 @@ public class Hero : MonoBehaviour {
     // Create a WeaponFireDelegate field named fireDelegate.
     public WeaponFireDelegate fireEvent;
 
-	void Awake()
+    void Awake()
     {
         if (S == null)
         {
@@ -42,6 +55,14 @@ public class Hero : MonoBehaviour {
         // Reset the weapons to start _Hero with 1 blaster
         ClearWeapons();
         weapons[0].SetType(eWeaponType.blaster);
+
+        //get Materials and colors for this GameObject and children
+        materials = Utils.GetAllMaterials(gameObject);
+        originalColors = new Color[materials.Length];
+        for (int i = 0; i < materials.Length; i++)
+        {
+            originalColors[i] = materials[i].color;
+        }
     }
 	
 	// Update is called once per frame
@@ -53,12 +74,12 @@ public class Hero : MonoBehaviour {
 
         // Change transform.position based on the axes
         Vector3 pos = transform.position;
-        pos.x += xAxis * speed * Time.deltaTime;
-        pos.y += yAxis * speed * Time.deltaTime;
+        pos.x += (xAxis + xAxis * boost) * speed * Time.deltaTime;
+        pos.y += (yAxis + yAxis * boost) * speed * Time.deltaTime;
         transform.position = pos;
 
         // Rotate the ship to make it feel more dynamic
-        transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult, 0);
+        transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult * (boost + 1), 0);
 
         // Use the fireDelegate to fire Weapons
         // First, make sure the button is pressed: Axis("Jump")
@@ -67,6 +88,26 @@ public class Hero : MonoBehaviour {
         {
             fireEvent();
             //TempFire();
+        }
+
+        float COOLDOWN = COOLDOWN_TIME - (dashLevel * .50f);
+        timeSinceLastPress = Time.deltaTime - lastPressTime;
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (dashLevel >= 1 && !dashedyet)
+            {
+                DashStart();
+            } 
+        }
+        if (boost <= 0f && dashedyet)
+        {
+            DashLinger();
+            Invoke("DashReturn", COOLDOWN);
+        }
+        if (boost > 0f)
+        {
+            boost -= 0.02f;
         }
     }
 
@@ -90,6 +131,7 @@ public class Hero : MonoBehaviour {
 
         if(enemy != null)
         {
+            if (boost >= 0.2f) return;
             shieldLevel--;
             Destroy(go);
         }
@@ -106,11 +148,17 @@ public class Hero : MonoBehaviour {
 
     public void AbsorbPowerUp(PowerUp pUp)
     {
-        
+        print("Powerup: " + pUp.type);
         switch (pUp.type)
         {
+
             case eWeaponType.shield:
                 shieldLevel++;
+                break;
+
+            case eWeaponType.dash:
+                print("dashLevel up!");
+                dashLevel++;
                 break;
 
             default:
@@ -153,6 +201,23 @@ public class Hero : MonoBehaviour {
         }
     }
 
+    public float dashLevel
+    {
+        get
+        {
+            return (_dashLevel);
+        }
+        set
+        {
+            _dashLevel = Mathf.Min(value, 4);
+            // Keep dash from reaching negative values
+            if (value < 0)
+            {
+                value = 0;
+            }
+        }
+    }
+
     Weapon GetEmptyWeaponSlot()
     {
         for (int i=0; i<weapons.Length; i++)
@@ -171,5 +236,31 @@ public class Hero : MonoBehaviour {
         {
             w.SetType(eWeaponType.none);
         }
+    }
+
+    void DashStart()
+    {
+        foreach (Material m in materials)
+        {
+            m.color = dashColor;
+        }
+        dashedyet = true;
+        boost = 1.5f;
+        lastPressTime = Time.deltaTime;
+    }
+    void DashLinger()
+    {
+        foreach (Material m in materials)
+        {
+            m.color = dashDoneColor;
+        }
+    }
+    void DashReturn()
+    {
+        for (int i = 0; i < materials.Length; i++)
+        {
+            materials[i].color = originalColors[i];
+        }
+        dashedyet = false;
     }
 }

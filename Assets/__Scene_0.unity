@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -540,17 +540,17 @@ MonoBehaviour:
     projectileColor: {r: 1, g: 1, b: 1, a: 1}
     damageOnHit: 5
     continuousDamage: 0
-    delayBetweenShots: 0.2
-    velocity: 50
+    delayBetweenShots: 0.15
+    velocity: 60
   - type: 2
     letter: S
     color: {r: 0, g: 0.9693699, b: 1, a: 1}
     weaponModelPrefab: {fileID: 1899541879965282, guid: 59a4640edad59f94a87c1d235355cb6a,
       type: 3}
     projectileColor: {r: 0.007843138, g: 0.9607844, b: 0.9960785, a: 1}
-    damageOnHit: 5
+    damageOnHit: 2.5
     continuousDamage: 0
-    delayBetweenShots: 0.25
+    delayBetweenShots: 0.3
     velocity: 50
   - type: 6
     letter: 0
@@ -561,9 +561,18 @@ MonoBehaviour:
     continuousDamage: 0
     delayBetweenShots: 0
     velocity: 0
+  - type: 7
+    letter: D
+    color: {r: 0.47263014, g: 0.019607825, b: 0.972549, a: 1}
+    weaponModelPrefab: {fileID: 0}
+    projectileColor: {r: 0.4745098, g: 0.019607844, b: 0.972549, a: 1}
+    damageOnHit: 0
+    continuousDamage: 0
+    delayBetweenShots: 0
+    velocity: 0
   prefabPowerUp: {fileID: 1062273549804748, guid: 9649a9a79085a854d9990613a980f435,
     type: 3}
-  powerUpFrequency: 01000000010000000200000006000000
+  powerUpFrequency: 0100000001000000020000000600000007000000
 --- !u!4 &302997030 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -3293744620739765933, guid: ae3a657191efe7040b52cc85f1d490eb,
