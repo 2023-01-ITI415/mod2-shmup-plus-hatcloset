@@ -90,7 +90,7 @@ public class Hero : MonoBehaviour {
             //TempFire();
         }
 
-        float COOLDOWN = COOLDOWN_TIME - (dashLevel * .50f);
+        float COOLDOWN = COOLDOWN_TIME - (dashLevel * .45f);
         timeSinceLastPress = Time.deltaTime - lastPressTime;
 
         if (Input.GetButtonDown("Jump"))
@@ -133,6 +133,7 @@ public class Hero : MonoBehaviour {
         {
             if (boost >= 0.2f) return;
             shieldLevel--;
+            dashLevel--;
             Destroy(go);
         }
         else if (pUp != null)
