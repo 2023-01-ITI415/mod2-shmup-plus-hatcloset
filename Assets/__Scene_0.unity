@@ -565,7 +565,7 @@ MonoBehaviour:
     letter: D
     color: {r: 0.47263014, g: 0.019607825, b: 0.972549, a: 1}
     weaponModelPrefab: {fileID: 0}
-    projectileColor: {r: 0.4745098, g: 0.019607844, b: 0.972549, a: 1}
+    projectileColor: {r: 0.47450984, g: 0.019607844, b: 0.9725491, a: 1}
     damageOnHit: 0
     continuousDamage: 0
     delayBetweenShots: 0
@@ -1417,6 +1417,9 @@ MonoBehaviour:
   - {fileID: 1325660965}
   - {fileID: 1344960761}
   - {fileID: 1821739884}
+  originalColors: []
+  materials: []
+  dashedyet: 0
 --- !u!4 &1342965580
 Transform:
   m_ObjectHideFlags: 0
